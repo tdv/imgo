@@ -1,6 +1,7 @@
 package service
 
 type Service interface {
-	Start() error
+	Start()
 	Stop() error
+	Started() bool
 }

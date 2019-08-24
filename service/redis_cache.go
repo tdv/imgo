@@ -5,31 +5,35 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/spf13/viper"
 )
 
 type redisCache struct {
 	Storage
 	client *redis.Client
+
+	expirationTimeout time.Duration
 }
 
-func (this *redisCache) init() error {
+func (this *redisCache) init(address string, password string, db int, expiration time.Duration) error {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     address,
+		Password: password,
+		DB:       db,
 	})
 
 	if client == nil {
 		return errors.New("Failed to create redis client.")
 	}
 
+	this.expirationTimeout = expiration
 	this.client = client
 
 	return nil
 }
 
 func (this *redisCache) Put(id string, buf []byte) error {
-	err := this.client.Set(id, buf, 10*time.Minute).Err()
+	err := this.client.Set(id, buf, this.expirationTimeout).Err()
 	if err != nil {
 		return err
 	}
@@ -46,10 +50,15 @@ func (this *redisCache) Get(id string) ([]byte, error) {
 	return []byte(val), nil
 }
 
-func CreateRedisCache() (Storage, error) {
+func CreateRedisCache(config *viper.Viper) (Storage, error) {
 	client := redisCache{}
 
-	if err := client.init(); err != nil {
+	if err := client.init(
+		config.GetString("cache.redis.address"),
+		config.GetString("cache.redis.password"),
+		config.GetInt("cache.redis.db"),
+		time.Duration(config.GetInt("cache.redis.expiration"))*time.Minute,
+	); err != nil {
 		return nil, err
 	}
 

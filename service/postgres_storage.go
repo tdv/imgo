@@ -20,6 +20,7 @@ import (
 	"errors"
 
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 type postgresStorage struct {
@@ -27,11 +28,11 @@ type postgresStorage struct {
 	db *sql.DB
 }
 
-func (this *postgresStorage) init() error {
+func (this *postgresStorage) init(host string, port string, dbname string, sslmode string, user string, password string) error {
 	db, err := sql.Open(
 		"postgres",
-		"host=localhost port=5432 dbname=imgo "+
-			"sslmode=disable user=postgres password= ",
+		"host="+host+" port="+port+" dbname="+dbname+" "+
+			"sslmode="+sslmode+" user="+user+" password= "+password+"",
 	)
 
 	if err != nil {
@@ -83,9 +84,16 @@ func (this *postgresStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
-func CreatePostgresStorage() (Storage, error) {
+func CreatePostgresStorage(config *viper.Viper) (Storage, error) {
 	storage := postgresStorage{}
-	if err := storage.init(); err != nil {
+	if err := storage.init(
+		config.GetString("storage.postgres.host"),
+		config.GetString("storage.postgres.port"),
+		config.GetString("storage.postgres.dbname"),
+		config.GetString("storage.postgres.sslmode"),
+		config.GetString("storage.postgres.user"),
+		config.GetString("storage.postgres.password"),
+	); err != nil {
 		return nil, err
 	}
 	return &storage, nil

@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	if builder, err := service.CreateAppBuilder(); err != nil {
+	if config, err := service.InitConfig(); err != nil {
+		panic("Failed to read config. Error: " + err.Error())
+	} else if builder, err := service.CreateAppBuilder(config); err != nil {
 		panic("Failed to create application. Error: " + err.Error())
 	} else if app, err := builder.Build(); err != nil {
 		panic("Failed to create server. Error: " + err.Error())

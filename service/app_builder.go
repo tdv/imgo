@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/sarulabs/di"
+	"github.com/spf13/viper"
 )
 
 type appBuilder struct {
@@ -9,47 +10,31 @@ type appBuilder struct {
 	builder *di.Builder
 }
 
-func (this *appBuilder) init() error {
+func (this *appBuilder) init(config *viper.Viper) error {
 	if builder, err := di.NewBuilder(); err != nil {
 		return err
 	} else {
 		if err := builder.Add(
 			[]di.Def{
 				{
-					Name:  "postgres-storage",
+					Name:  "postgres",
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreatePostgresStorage()
+						return CreatePostgresStorage(config)
 					},
 				},
 				{
-					Name:  "redis-cache",
+					Name:  "redis",
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreateRedisCache()
+						return CreateRedisCache(config)
 					},
 				},
 				{
-					Name:  "image-converter",
+					Name:  "imageconverter",
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreateImageMagickConverter()
-					},
-				},
-				{
-					Name:  "storage",
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						// TODO: select from config
-						return ctx.Get("postgres-storage"), nil
-					},
-				},
-				{
-					Name:  "cache",
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						// TODO: select from config
-						return ctx.Get("redis-cache"), nil
+						return CreateImageMagickConverter(config)
 					},
 				},
 				{
@@ -57,9 +42,10 @@ func (this *appBuilder) init() error {
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
 						return CreateHttpServer(
-							ctx.Get("image-converter").(Converter),
-							ctx.Get("storage").(Storage),
-							ctx.Get("cache").(Storage),
+							config,
+							ctx.Get("imageconverter").(Converter),
+							ctx.Get(config.GetString("storage.active")).(Storage),
+							ctx.Get(config.GetString("cache.active")).(Storage),
 						)
 					},
 				},
@@ -80,10 +66,10 @@ func (this *appBuilder) Build() (interface{}, error) {
 	return service, nil
 }
 
-func CreateAppBuilder() (Builder, error) {
+func CreateAppBuilder(config *viper.Viper) (Builder, error) {
 	builder := appBuilder{}
 
-	if err := builder.init(); err != nil {
+	if err := builder.init(config); err != nil {
 		return nil, err
 	}
 

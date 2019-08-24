@@ -5,14 +5,17 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 )
 
 type httpService struct {
 	Service
+	address   string
 	converter Converter
 	storage   Storage
 	cache     Storage
@@ -36,8 +39,36 @@ func (this *httpService) onPut(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	params := req.URL.Query()
+
+	format := params.Get("format")
+
+	if len(format) < 1 {
+		resp.WriteHeader(http.StatusBadRequest)
+		resp.Write([]byte("The \"format\" parameter must not be empty."))
+		return
+	}
+
+	var width *int
+	if w := params.Get("width"); len(w) > 0 {
+		if val, err := strconv.Atoi(w); err != nil {
+			// TODO: to log
+		} else {
+			width = &val
+		}
+	}
+
+	var height *int
+	if h := params.Get("height"); len(h) > 0 {
+		if val, err := strconv.Atoi(h); err != nil {
+			// TODO: to log
+		} else {
+			height = &val
+		}
+	}
+
 	var hash string
-	if buf, hash, err = this.converter.Convert(buf); err != nil {
+	if buf, hash, err = this.converter.Convert(buf, format, width, height); err != nil {
 		resp.WriteHeader(http.StatusInternalServerError)
 		resp.Write([]byte("Failed to convert image. Error: " + err.Error()))
 		return
@@ -96,7 +127,7 @@ func (this *httpService) Start() {
 	router.HandleFunc("/get/{id}", this.onGet).Methods("GET")
 
 	this.server = &http.Server{
-		Addr:    "0.0.0.0:55555",
+		Addr:    this.address,
 		Handler: router,
 	}
 
@@ -125,7 +156,7 @@ func (this *httpService) Started() bool {
 	return this.server != nil
 }
 
-func CreateHttpServer(converter Converter, storage Storage, cache Storage) (Service, error) {
+func CreateHttpServer(config *viper.Viper, converter Converter, storage Storage, cache Storage) (Service, error) {
 	if converter == nil {
 		return nil, errors.New("Empty converter.")
 	}
@@ -137,6 +168,7 @@ func CreateHttpServer(converter Converter, storage Storage, cache Storage) (Serv
 	}
 
 	server := httpService{
+		address:   config.GetString("server.address"),
 		converter: converter,
 		storage:   storage,
 		cache:     cache,

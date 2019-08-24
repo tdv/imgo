@@ -1,0 +1,38 @@
+{
+    "server": {
+        "address1": "0.0.0.0:55555"
+    },
+    "imageconverter": {
+        "format": "png",
+        "size": {
+            "default": {
+                "width": 300,
+                "height": 200
+            },
+            "max": {
+                "width": 4096,
+                "height": 4096
+            }
+        }
+    },
+    "storage": {
+        "active": "postgres",
+        "postgres": {
+            "host": "localhost",
+            "port": 5432,
+            "dbname": "imgo",
+            "sslmode": "disable",
+            "user": "postgres",
+            "password": ""
+        }
+    },
+    "cache": {
+        "active": "redis",
+        "redis": {
+            "address": "localhost:6379",
+            "db": 0,
+            "password": "",
+            "expiration": 15
+        }
+    }
+}

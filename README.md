@@ -7,10 +7,10 @@ It was an interesting experience for me, and I hope that this project might be a
 
 # Introduction
 The aim of the service is not to frequently upload images by resources' administrators or topic creators, and fast getting stored and cached images from a service by resource users.  
-The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. In the future, I'm going to enlarge the service by different implementations of storages and caches.
+The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. In the future, I'm going to enlarge the service by different implementations of the interfaces of service.
 
 # Features
-- Upload images
+- Uploading images
 - Getting images
 - Converting images into one common format for the service
 
@@ -23,7 +23,7 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 - Testing
 
 # OS and Compiller
-I built this project in Go 1.6 on Ubuntu 16.04 / 18.04, and I hope that project will be able to build in other OS' and compler's versions.
+I built this project in Go 1.6 on Ubuntu 16.04 / 18.04, and I hope that project will be able to build in other OS and compler's versions.
 
 # Dependencies
 - ImageMagick (for image convertation)
@@ -37,26 +37,26 @@ go build
 ```
 
 # Usage
-**Note**
+**Note**  
 Since the service in its basic configuration uses PostgreSQL-based storage and Redis-based cache, you must have these services in your environment. Of course, you can change the basic options in the configuration file or, perhaps, add your own implementation of one of the interfaces and use it.  
 (PostgreSQL database schema in db/postgres/schema.sql)  
 
-**Run**
-After build you can run application by command
+**Run**  
+After the build you can run application by followed command
 ```bash
 ./imgo
 ```
-**Note**
+**Note**  
 The service starts with the configuration file, which should be placed next to the application.  
-Allowed Configuration Formats:
+Allowed configuration formats:
 - json
 - xml
-- yaml
+- yaml  
 The format is determined by the configuration file extension.  
 
-**Upload images**
+**Upload images**  
 For testing images uploading, you can use curl.  
-For example, run the below command from go/src/img directory  
+For example, run the below command from go/src/imgo directory  
 ```bash
 curl -is -XPUT "http://localhost:55555/put?format=JPG" --data-binary @./images/1.jpg
 ```
@@ -64,7 +64,7 @@ For uploading an image with a custom size, you can add extra parameters, like as
 ```bash
 curl -is -XPUT "http://localhost:55555/put?format=JPG&width=600&height=300" --data-binary @./images/1.jpg
 ```
-**Note**
+**Note**  
 You have to specify the required format parameter to understand the input format in the image converter (ImageMagick library).  
 ```bash
 Response example:
@@ -77,11 +77,12 @@ Content-Length: 40
 ```
 The returned identifier is intended to obtain the image, as shown in the example below.  
 
-**Getting images**
+**Getting images**  
 After image uploading, you can get it via a link similar to  
 http://localhost:55555/get/5966f327301f3922fce598f0574fa518d492f808
 
 # Tests
+Very often for basic load testing I use the ab utility. Such a simple test give me to do basic evaluation of the capabilities of the service.
 ```bash
 ab -c 800 -n 1000000 -r -k "http://localhost:55555/get/645b92e65c697d9f97a61f81b9a8739dd18e5a1f"
 
@@ -113,3 +114,10 @@ Waiting:        0   13   3.8     13     131
 Total:          1   89  39.4     88    1112
 
 ```
+Let's look at the line from the results
+```bash
+Requests per second:    8941.79 [#/sec] (mean)
+```
+I think, that is a good result. If your owns service really used with loads close to 10k rps, you'll have a lot of interesting tasks in future and money :)  
+
+**Many thanks for your attention!**

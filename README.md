@@ -7,7 +7,7 @@ It was an interesting experience for me, and I hope that this project might be a
 
 # Introduction
 The aim of the service is not to frequently upload images by resources' administrators or topic creators, and fast getting stored and cached images from a service by resource users.  
-The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. In the future, I'm going to enlarge the service by different implementations of the interfaces of service.
+The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. In the future, I'm going to enlarge the service by different interfaces implementations.
 
 # Features
 - Uploading images
@@ -52,6 +52,7 @@ Allowed configuration formats:
 - json
 - xml
 - yaml  
+
 The format is determined by the configuration file extension.  
 
 **Upload images**  

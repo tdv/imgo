@@ -5,13 +5,17 @@ import (
 )
 
 func setDefault(config *viper.Viper) {
-	config.SetDefault("server.address", "0.0.0.0:55555")
+	config.SetDefault("server.active", "http")
 
-	config.SetDefault("imageconverter.format", "png")
-	config.SetDefault("imageconverter.size.default.width", 300)
-	config.SetDefault("imageconverter.size.default.height", 200)
-	config.SetDefault("imageconverter.size.max.width", 4096)
-	config.SetDefault("imageconverter.size.max.height", 4096)
+	config.SetDefault("server.http.address", "0.0.0.0:55555")
+
+	config.SetDefault("imageconverter.active", "imagemagick")
+
+	config.SetDefault("imageconverter.imagemagick.format", "png")
+	config.SetDefault("imageconverter.imagemagick.size.default.width", 300)
+	config.SetDefault("imageconverter.imagemagick.size.default.height", 200)
+	config.SetDefault("imageconverter.imagemagick.size.max.width", 4096)
+	config.SetDefault("imageconverter.imagemagick.size.max.height", 4096)
 
 	config.SetDefault("storage.active", "postgres")
 

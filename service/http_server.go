@@ -168,7 +168,7 @@ func CreateHttpServer(config *viper.Viper, converter Converter, storage Storage,
 	}
 
 	server := httpService{
-		address:   config.GetString("server.address"),
+		address:   config.GetString("server.http.address"),
 		converter: converter,
 		storage:   storage,
 		cache:     cache,

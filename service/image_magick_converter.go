@@ -69,10 +69,10 @@ func (this *imageMagickConverter) Convert(buf []byte, format string, width *int,
 
 func CreateImageMagickConverter(config *viper.Viper) (Converter, error) {
 	return &imageMagickConverter{
-		defFormat: config.GetString("imageconverter.format"),
-		defWidth:  config.GetInt("imageconverter.size.default.width"),
-		defHeight: config.GetInt("imageconverter.size.default.height"),
-		maxWidth:  config.GetInt("imageconverter.size.max.width"),
-		maxHeight: config.GetInt("imageconverter.size.max.height"),
+		defFormat: config.GetString("imageconverter.imagemagick.format"),
+		defWidth:  config.GetInt("imageconverter.imagemagick.size.default.width"),
+		defHeight: config.GetInt("imageconverter.imagemagick.size.default.height"),
+		maxWidth:  config.GetInt("imageconverter.imagemagick.size.max.width"),
+		maxHeight: config.GetInt("imageconverter.imagemagick.size.max.height"),
 	}, nil
 }

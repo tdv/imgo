@@ -1,17 +1,23 @@
 {
     "server": {
-        "address1": "0.0.0.0:55555"
+        "active": "http",
+        "http": {
+            "address1": "0.0.0.0:55555"
+        }
     },
     "imageconverter": {
-        "format": "png",
-        "size": {
-            "default": {
-                "width": 300,
-                "height": 200
-            },
-            "max": {
-                "width": 4096,
-                "height": 4096
+        "active": "imagemagick",
+        "imagemagick": {
+            "format": "png",
+            "size": {
+                "default": {
+                    "width": 300,
+                    "height": 200
+                },
+                "max": {
+                    "width": 4096,
+                    "height": 4096
+                }
             }
         }
     },

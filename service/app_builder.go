@@ -7,7 +7,8 @@ import (
 
 type appBuilder struct {
 	Builder
-	builder *di.Builder
+	severName string
+	builder   *di.Builder
 }
 
 func (this *appBuilder) init(config *viper.Viper) error {
@@ -31,19 +32,19 @@ func (this *appBuilder) init(config *viper.Viper) error {
 					},
 				},
 				{
-					Name:  "imageconverter",
+					Name:  "imagemagick",
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
 						return CreateImageMagickConverter(config)
 					},
 				},
 				{
-					Name:  "http-server",
+					Name:  "http",
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
 						return CreateHttpServer(
 							config,
-							ctx.Get("imageconverter").(Converter),
+							ctx.Get(config.GetString("imageconverter.active")).(Converter),
 							ctx.Get(config.GetString("storage.active")).(Storage),
 							ctx.Get(config.GetString("cache.active")).(Storage),
 						)
@@ -62,12 +63,12 @@ func (this *appBuilder) init(config *viper.Viper) error {
 
 func (this *appBuilder) Build() (interface{}, error) {
 	ctx := this.builder.Build()
-	service := ctx.Get("http-server").(Service)
+	service := ctx.Get(this.severName).(Service)
 	return service, nil
 }
 
 func CreateAppBuilder(config *viper.Viper) (Builder, error) {
-	builder := appBuilder{}
+	builder := appBuilder{severName: config.GetString("server.active")}
 
 	if err := builder.init(config); err != nil {
 		return nil, err

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"imgo/service"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -19,8 +20,12 @@ func main() {
 		server.Start()
 		defer server.Stop()
 
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
 		fmt.Println("ImGo has been started successfully!")
-		fmt.Println("Press Enter for quit.")
-		bufio.NewReader(os.Stdin).ReadBytes('\n')
+		fmt.Println("Press Ctrl+C for quit.")
+
+		<-c
 	}
 }

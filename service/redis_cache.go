@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
-	"github.com/spf13/viper"
 )
 
 type redisCache struct {
@@ -50,14 +49,18 @@ func (this *redisCache) Get(id string) ([]byte, error) {
 	return []byte(val), nil
 }
 
-func CreateRedisCache(config *viper.Viper) (Storage, error) {
+func CreateRedisCache(config Config) (Storage, error) {
+	if config == nil {
+		return nil, errors.New("Empty config.")
+	}
+
 	client := redisCache{}
 
 	if err := client.init(
-		config.GetString("cache.redis.address"),
-		config.GetString("cache.redis.password"),
-		config.GetInt("cache.redis.db"),
-		time.Duration(config.GetInt("cache.redis.expiration"))*time.Minute,
+		config.GetStrVal("address"),
+		config.GetStrVal("password"),
+		config.GetIntVal("db"),
+		time.Duration(config.GetIntVal("expiration"))*time.Minute,
 	); err != nil {
 		return nil, err
 	}

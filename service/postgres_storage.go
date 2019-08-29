@@ -1,26 +1,11 @@
 package service
 
-/*
-Table for storing images
-
-BEGIN;
-
-CREATE TABLE images
-(
-	id varchar unique,
-	data bytea
-);
-
-COMMIT;
-
-*/
-
 import (
 	"database/sql"
 	"errors"
+	"strconv"
 
 	_ "github.com/lib/pq"
-	"github.com/spf13/viper"
 )
 
 type postgresStorage struct {
@@ -28,7 +13,7 @@ type postgresStorage struct {
 	db *sql.DB
 }
 
-func (this *postgresStorage) init(host string, port string, dbname string, sslmode string, user string, password string) error {
+func (this *postgresStorage) init(host, port, dbname, sslmode, user, password string) error {
 	db, err := sql.Open(
 		"postgres",
 		"host="+host+" port="+port+" dbname="+dbname+" "+
@@ -84,15 +69,18 @@ func (this *postgresStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
-func CreatePostgresStorage(config *viper.Viper) (Storage, error) {
+func CreatePostgresStorage(config Config) (Storage, error) {
+	if config == nil {
+		return nil, errors.New("Empty config.")
+	}
 	storage := postgresStorage{}
 	if err := storage.init(
-		config.GetString("storage.postgres.host"),
-		config.GetString("storage.postgres.port"),
-		config.GetString("storage.postgres.dbname"),
-		config.GetString("storage.postgres.sslmode"),
-		config.GetString("storage.postgres.user"),
-		config.GetString("storage.postgres.password"),
+		config.GetStrVal("host"),
+		strconv.Itoa(config.GetIntVal("port")),
+		config.GetStrVal("dbname"),
+		config.GetStrVal("sslmode"),
+		config.GetStrVal("user"),
+		config.GetStrVal("password"),
 	); err != nil {
 		return nil, err
 	}

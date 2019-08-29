@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/spf13/viper"
 )
 
 type httpService struct {
@@ -156,7 +155,10 @@ func (this *httpService) Started() bool {
 	return this.server != nil
 }
 
-func CreateHttpServer(config *viper.Viper, converter Converter, storage Storage, cache Storage) (Service, error) {
+func CreateHttpServer(config Config, converter Converter, storage Storage, cache Storage) (Service, error) {
+	if config == nil {
+		return nil, errors.New("Empty config.")
+	}
 	if converter == nil {
 		return nil, errors.New("Empty converter.")
 	}
@@ -168,7 +170,7 @@ func CreateHttpServer(config *viper.Viper, converter Converter, storage Storage,
 	}
 
 	server := httpService{
-		address:   config.GetString("server.http.address"),
+		address:   config.GetStrVal("address"),
 		converter: converter,
 		storage:   storage,
 		cache:     cache,

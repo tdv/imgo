@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if config, err := service.InitConfig(); err != nil {
+	if config, err := service.LoadDefConfig(); err != nil {
 		panic("Failed to read config. Error: " + err.Error())
 	} else if builder, err := service.CreateAppBuilder(config); err != nil {
 		panic("Failed to create application. Error: " + err.Error())

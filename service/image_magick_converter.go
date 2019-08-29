@@ -5,11 +5,11 @@ package service
 import (
 	"crypto/sha1"
 	"encoding/hex"
+	"errors"
 
 	"strconv"
 
 	"github.com/quirkey/magick"
-	"github.com/spf13/viper"
 )
 
 type imageMagickConverter struct {
@@ -67,12 +67,16 @@ func (this *imageMagickConverter) Convert(buf []byte, format string, width *int,
 	return blob, id, nil
 }
 
-func CreateImageMagickConverter(config *viper.Viper) (Converter, error) {
+func CreateImageMagickConverter(config Config) (Converter, error) {
+	if config == nil {
+		return nil, errors.New("Empty config.")
+	}
+
 	return &imageMagickConverter{
-		defFormat: config.GetString("imageconverter.imagemagick.format"),
-		defWidth:  config.GetInt("imageconverter.imagemagick.size.default.width"),
-		defHeight: config.GetInt("imageconverter.imagemagick.size.default.height"),
-		maxWidth:  config.GetInt("imageconverter.imagemagick.size.max.width"),
-		maxHeight: config.GetInt("imageconverter.imagemagick.size.max.height"),
+		defFormat: config.GetStrVal("format"),
+		defWidth:  config.GetIntVal("size.default.width"),
+		defHeight: config.GetIntVal("size.default.height"),
+		maxWidth:  config.GetIntVal("size.max.width"),
+		maxHeight: config.GetIntVal("size.max.height"),
 	}, nil
 }

@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/sarulabs/di"
-	"github.com/spf13/viper"
 )
 
 type appBuilder struct {
@@ -11,42 +10,47 @@ type appBuilder struct {
 	builder   *di.Builder
 }
 
-func (this *appBuilder) init(config *viper.Viper) error {
+func (this *appBuilder) init(config Config) error {
+	this.severName = config.GetStrVal(ConfigPath(EntityServer, "active"))
+
 	if builder, err := di.NewBuilder(); err != nil {
 		return err
 	} else {
 		if err := builder.Add(
 			[]di.Def{
 				{
-					Name:  "postgres",
+					Name:  ImplPostgres,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreatePostgresStorage(config)
+						cfg := config.GetBranch(ConfigPath(EntityStorage, ImplPostgres))
+						return CreatePostgresStorage(cfg)
 					},
 				},
 				{
-					Name:  "redis",
+					Name:  ImplRedis,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreateRedisCache(config)
+						cfg := config.GetBranch(ConfigPath(EntityCache, ImplRedis))
+						return CreateRedisCache(cfg)
 					},
 				},
 				{
-					Name:  "imagemagick",
+					Name:  ImplImageMagick,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
-						return CreateImageMagickConverter(config)
+						cfg := config.GetBranch(ConfigPath(EntityImageConverter, ImplImageMagick))
+						return CreateImageMagickConverter(cfg)
 					},
 				},
 				{
-					Name:  "http",
+					Name:  ImplHttp,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {
 						return CreateHttpServer(
-							config,
-							ctx.Get(config.GetString("imageconverter.active")).(Converter),
-							ctx.Get(config.GetString("storage.active")).(Storage),
-							ctx.Get(config.GetString("cache.active")).(Storage),
+							config.GetBranch(ConfigPath(EntityServer, ImplHttp)),
+							ctx.Get(config.GetStrVal(ConfigPath(EntityImageConverter, "active"))).(Converter),
+							ctx.Get(config.GetStrVal(ConfigPath(EntityStorage, "active"))).(Storage),
+							ctx.Get(config.GetStrVal(ConfigPath(EntityCache, "active"))).(Storage),
 						)
 					},
 				},
@@ -67,8 +71,8 @@ func (this *appBuilder) Build() (interface{}, error) {
 	return service, nil
 }
 
-func CreateAppBuilder(config *viper.Viper) (Builder, error) {
-	builder := appBuilder{severName: config.GetString("server.active")}
+func CreateAppBuilder(config Config) (Builder, error) {
+	builder := appBuilder{}
 
 	if err := builder.init(config); err != nil {
 		return nil, err

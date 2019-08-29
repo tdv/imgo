@@ -17,7 +17,6 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 # Plans
 - Logging
 - Daemon mode
-- A little bit of refactoring
 - Adding new implementations of storage and cache
 - Examples in docker
 - Testing

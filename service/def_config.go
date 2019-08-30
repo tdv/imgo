@@ -34,6 +34,12 @@ func setDefault(config *viper.Viper) {
 	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "user"), "postgres")
 	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "password"), "")
 
+	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "host"), "localhost")
+	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "port"), 3306)
+	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "dbname"), "imgo")
+	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "user"), "postgres")
+	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "password"), "mysql")
+
 	config.SetDefault(ConfigPath(EntityCache, "active"), ImplRedis)
 
 	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "address"), "localhost:6379")

@@ -27,6 +27,14 @@ func (this *appBuilder) init(config Config) error {
 					},
 				},
 				{
+					Name:  ImplMySql,
+					Scope: di.App,
+					Build: func(ctx di.Container) (interface{}, error) {
+						cfg := config.GetBranch(ConfigPath(EntityStorage, ImplMySql))
+						return CreateMySqlStorage(cfg)
+					},
+				},
+				{
 					Name:  ImplRedis,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {

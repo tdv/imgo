@@ -1,0 +1,9 @@
+BEGIN;
+
+CREATE TABLE images
+(
+    id VARCHAR(512) UNIQUE,
+    data LONGBLOB
+);
+
+COMMIT;

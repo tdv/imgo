@@ -17,8 +17,8 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 -- PostgreSQL based
 -- MySQL based
 - Supported cache implementations:
--- Redis based
--- Memcached based
+- - Redis based
+- - Memcached based
 
 # Plans
 - Logging

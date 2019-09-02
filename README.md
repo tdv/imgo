@@ -6,18 +6,23 @@ This name has been chosen coz it's my first own project in Go after more than 15
 It was an interesting experience for me, and I hope that this project might be a step towards learning Go for you like as for me, or this will have become a part of your own web project.
 
 # Introduction
-The aim of the service is not to frequently upload images by resources' administrators or topic creators, and fast getting stored and cached images from a service by resource users.  
-The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. In the future, I'm going to enlarge the service by different interfaces implementations.
+The aim of the service is not to frequently upload images by resources' administrators or topic creators, and majour purpouse is the fast getting stored and cached images from a service by resource users.  
+The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. You can enlarge service by your own storage, cache and other entities implementations for your needs. And I hope that it'll be effortless for you.  
 
 # Features
 - Uploading images
 - Getting images
-- Converting images into one common format for the service
+- Converting images to the one common format
+- Supported storage implementations:
+-- PostgreSQL based
+-- MySQL based
+- Supported cache implementations:
+-- Redis based
+-- Memcached based
 
 # Plans
 - Logging
 - Daemon mode
-- Adding new implementations of storage and cache
 - Examples in docker
 - Testing
 

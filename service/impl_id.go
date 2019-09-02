@@ -6,4 +6,5 @@ const (
 	ImplPostgres    = "postgres"
 	ImplMySql       = "mysql"
 	ImplRedis       = "redis"
+	ImplMemcached   = "memcached"
 )

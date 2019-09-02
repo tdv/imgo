@@ -46,6 +46,9 @@ func setDefault(config *viper.Viper) {
 	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "db"), 0)
 	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "password"), "")
 	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "expiration"), 15)
+
+	config.SetDefault(ConfigPath(EntityCache, ImplMemcached, "nodes"), "localhost:11211")
+	config.SetDefault(ConfigPath(EntityCache, ImplMemcached, "expiration"), 15)
 }
 
 func (this *config) findNode(path string) interface{} {

@@ -43,6 +43,14 @@ func (this *appBuilder) init(config Config) error {
 					},
 				},
 				{
+					Name:  ImplMemcached,
+					Scope: di.App,
+					Build: func(ctx di.Container) (interface{}, error) {
+						cfg := config.GetBranch(ConfigPath(EntityCache, ImplMemcached))
+						return CreateMemcachedCache(cfg)
+					},
+				},
+				{
 					Name:  ImplImageMagick,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {

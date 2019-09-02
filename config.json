@@ -47,6 +47,10 @@
                 "db": 0,
                 "password": "",
                 "expiration": 15
+            },
+            "memcached": {
+                "nodes": "localhost:11211",
+                "expiration": 15
             }
         }
     }

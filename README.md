@@ -13,12 +13,8 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 - Uploading images
 - Getting images
 - Converting images to the one common format
-- Supported storage implementations:
--- PostgreSQL based
--- MySQL based
-- Supported cache implementations:
-- - Redis based
-- - Memcached based
+- Supported storage implementations: PostgreSQL based, MySQL based
+- Supported cache implementations: Redis based, Memcached based
 
 # Plans
 - Logging

@@ -23,7 +23,7 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 - Testing
 
 # OS and Compiller
-I built this project in Go 1.6 on Ubuntu 16.04 / 18.04, and I hope that project will be able to build in other OS and compler's versions.
+I built this project in Go 1.12 on Ubuntu 16.04 / 18.04, and I hope that project will be able to build in other OS and compler's versions.
 
 # Dependencies
 - ImageMagick (for image convertation)

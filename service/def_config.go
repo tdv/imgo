@@ -25,6 +25,12 @@ func setDefault(config *viper.Viper) {
 	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.max.width"), 4096)
 	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.max.height"), 4096)
 
+	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "format"), "png")
+	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.default.width"), 300)
+	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.default.height"), 200)
+	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.max.width"), 4096)
+	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.max.height"), 4096)
+
 	config.SetDefault(ConfigPath(EntityStorage, "active"), ImplPostgres)
 
 	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "host"), "localhost")

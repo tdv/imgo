@@ -59,6 +59,14 @@ func (this *appBuilder) init(config Config) error {
 					},
 				},
 				{
+					Name:  ImplStdImage,
+					Scope: di.App,
+					Build: func(ctx di.Container) (interface{}, error) {
+						cfg := config.GetBranch(ConfigPath(EntityImageConverter, ImplStdImage))
+						return CreateStdImageConverter(cfg)
+					},
+				},
+				{
 					Name:  ImplHttp,
 					Scope: di.App,
 					Build: func(ctx di.Container) (interface{}, error) {

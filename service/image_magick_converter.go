@@ -24,7 +24,7 @@ type imageMagickConverter struct {
 	maxHeight int
 }
 
-func calcLen(len *int, def int, max int) string {
+func (this *imageMagickConverter) calcLen(len *int, def int, max int) string {
 	var l int
 	if len != nil {
 		if *len <= 0 {
@@ -49,8 +49,8 @@ func (this *imageMagickConverter) Convert(buf []byte, format string, width *int,
 
 	defer image.Destroy()
 
-	w := calcLen(width, this.defWidth, this.maxWidth)
-	h := calcLen(height, this.defHeight, this.maxHeight)
+	w := this.calcLen(width, this.defWidth, this.maxWidth)
+	h := this.calcLen(height, this.defHeight, this.maxHeight)
 
 	if err = image.Resize(w + "x" + h); err != nil {
 		return nil, "", err

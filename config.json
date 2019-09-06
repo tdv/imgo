@@ -20,6 +20,19 @@
                         "height": 4096
                     }
                 }
+            },
+            "std": {
+                "format": "png",
+                "size": {
+                    "default": {
+                        "width": 300,
+                        "height": 200
+                    },
+                    "max": {
+                        "width": 4096,
+                        "height": 4096
+                    }
+                }
             }
         },
         "storage": {

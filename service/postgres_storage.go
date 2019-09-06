@@ -69,20 +69,24 @@ func (this *postgresStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
-func CreatePostgresStorage(config Config) (Storage, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
-	storage := postgresStorage{}
-	if err := storage.init(
-		config.GetStrVal("host"),
-		strconv.Itoa(config.GetIntVal("port")),
-		config.GetStrVal("dbname"),
-		config.GetStrVal("sslmode"),
-		config.GetStrVal("user"),
-		config.GetStrVal("password"),
-	); err != nil {
-		return nil, err
-	}
-	return &storage, nil
-}
+const ImplPostgres = "postgres"
+
+var _ = RegisterEntity(
+	EntityStorage,
+	ImplPostgres,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
+		storage := postgresStorage{}
+		if err := storage.init(
+			config.GetStrVal("host"),
+			strconv.Itoa(config.GetIntVal("port")),
+			config.GetStrVal("dbname"),
+			config.GetStrVal("sslmode"),
+			config.GetStrVal("user"),
+			config.GetStrVal("password"),
+		); err != nil {
+			return nil, err
+		}
+		return &storage, nil
+	},
+)

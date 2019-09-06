@@ -46,26 +46,30 @@ func (this *memcachedCache) Get(id string) ([]byte, error) {
 	return val.Value, nil
 }
 
-func CreateMemcachedCache(config Config) (Storage, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
+const ImplMemcached = "memcached"
 
-	client := memcachedCache{}
+var _ = RegisterEntity(
+	EntityCache,
+	ImplMemcached,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
 
-	// The nodes separator is ';'
-	// You can use some nodes which must be separated by ';'
-	nodes := strings.Split(config.GetStrVal("nodes"), ";")
-	if len(nodes) < 1 {
-		return nil, errors.New("No nodes to connect.")
-	}
+		client := memcachedCache{}
 
-	if err := client.init(
-		config.GetIntVal("expiration")*60,
-		nodes...,
-	); err != nil {
-		return nil, err
-	}
+		// The nodes separator is ';'
+		// You can use some nodes which must be separated by ';'
+		nodes := strings.Split(config.GetStrVal("nodes"), ";")
+		if len(nodes) < 1 {
+			return nil, errors.New("No nodes to connect.")
+		}
 
-	return &client, nil
-}
+		if err := client.init(
+			config.GetIntVal("expiration")*60,
+			nodes...,
+		); err != nil {
+			return nil, err
+		}
+
+		return &client, nil
+	},
+)

@@ -4,6 +4,6 @@ import (
 	"strings"
 )
 
-func ConfigPath(items ...string) string {
+func configPath(items ...string) string {
 	return strings.Join(items, ".")
 }

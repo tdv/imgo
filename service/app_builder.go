@@ -1,106 +1,80 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/sarulabs/di"
 )
 
 type appBuilder struct {
 	Builder
-	severName string
-	builder   *di.Builder
-}
-
-func (this *appBuilder) init(config Config) error {
-	this.severName = config.GetStrVal(ConfigPath(EntityServer, "active"))
-
-	if builder, err := di.NewBuilder(); err != nil {
-		return err
-	} else {
-		if err := builder.Add(
-			[]di.Def{
-				{
-					Name:  ImplPostgres,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityStorage, ImplPostgres))
-						return CreatePostgresStorage(cfg)
-					},
-				},
-				{
-					Name:  ImplMySql,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityStorage, ImplMySql))
-						return CreateMySqlStorage(cfg)
-					},
-				},
-				{
-					Name:  ImplRedis,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityCache, ImplRedis))
-						return CreateRedisCache(cfg)
-					},
-				},
-				{
-					Name:  ImplMemcached,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityCache, ImplMemcached))
-						return CreateMemcachedCache(cfg)
-					},
-				},
-				{
-					Name:  ImplImageMagick,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityImageConverter, ImplImageMagick))
-						return CreateImageMagickConverter(cfg)
-					},
-				},
-				{
-					Name:  ImplStdImage,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						cfg := config.GetBranch(ConfigPath(EntityImageConverter, ImplStdImage))
-						return CreateStdImageConverter(cfg)
-					},
-				},
-				{
-					Name:  ImplHttp,
-					Scope: di.App,
-					Build: func(ctx di.Container) (interface{}, error) {
-						return CreateHttpServer(
-							config.GetBranch(ConfigPath(EntityServer, ImplHttp)),
-							ctx.Get(config.GetStrVal(ConfigPath(EntityImageConverter, "active"))).(Converter),
-							ctx.Get(config.GetStrVal(ConfigPath(EntityStorage, "active"))).(Storage),
-							ctx.Get(config.GetStrVal(ConfigPath(EntityCache, "active"))).(Storage),
-						)
-					},
-				},
-			}...,
-		); err != nil {
-			return err
-		} else {
-			this.builder = builder
-		}
-	}
-
-	return nil
+	config  Config
+	builder *di.Builder
 }
 
 func (this *appBuilder) Build() (interface{}, error) {
 	ctx := this.builder.Build()
-	service := ctx.Get(this.severName).(Service)
+	service := ctx.Get(this.config.GetStrVal(configPath(EntityServer, "active"))).(Service)
 	return service, nil
 }
 
-func CreateAppBuilder(config Config) (Builder, error) {
-	builder := appBuilder{}
+var mainBuilderInst *appBuilder = nil
 
-	if err := builder.init(config); err != nil {
-		return nil, err
+type buildContext struct {
+	BuildContext
+
+	entity    string
+	impl      string
+	config    Config
+	container di.Container
+}
+
+func (this *buildContext) GetConfig() Config {
+	return this.config.GetBranch(configPath(this.entity, this.impl))
+}
+
+func (this *buildContext) GetEntity(id string) interface{} {
+	return this.container.Get(this.config.GetStrVal(configPath(id, "active")))
+}
+
+func RegisterEntity(entity, impl string, creator func(BuildContext) (interface{}, error)) error {
+	if mainBuilderInst == nil {
+		mainBuilderInst = &appBuilder{}
 	}
 
-	return &builder, nil
+	if mainBuilderInst.builder == nil {
+		if builder, err := di.NewBuilder(); err != nil {
+			panic("Failed to create application builder. Error: " + err.Error())
+		} else {
+			mainBuilderInst.builder = builder
+		}
+	}
+
+	mainBuilderInst.builder.Add(di.Def{
+		Name:  impl,
+		Scope: di.App,
+		Build: func(ctx di.Container) (interface{}, error) {
+			if mainBuilderInst.config == nil {
+				return nil, errors.New("Application builder was not initialized.")
+			}
+			return creator(&buildContext{
+				entity:    entity,
+				impl:      impl,
+				config:    mainBuilderInst.config,
+				container: ctx,
+			})
+		},
+	})
+
+	return nil
+}
+
+func InitAppBuilder(config Config) (Builder, error) {
+	if mainBuilderInst.config != nil {
+		return nil, errors.New("You can't twice initialize the application builder.")
+	}
+
+	mainBuilderInst.config = config
+
+	return mainBuilderInst, nil
 }

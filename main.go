@@ -11,7 +11,7 @@ import (
 func main() {
 	if config, err := service.LoadDefConfig(); err != nil {
 		panic("Failed to read config. Error: " + err.Error())
-	} else if builder, err := service.CreateAppBuilder(config); err != nil {
+	} else if builder, err := service.InitAppBuilder(config); err != nil {
 		panic("Failed to create application. Error: " + err.Error())
 	} else if app, err := builder.Build(); err != nil {
 		panic("Failed to create server. Error: " + err.Error())

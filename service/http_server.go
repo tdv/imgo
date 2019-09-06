@@ -155,26 +155,24 @@ func (this *httpService) Started() bool {
 	return this.server != nil
 }
 
-func CreateHttpServer(config Config, converter Converter, storage Storage, cache Storage) (Service, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
-	if converter == nil {
-		return nil, errors.New("Empty converter.")
-	}
-	if storage == nil {
-		return nil, errors.New("Empty storage.")
-	}
-	if cache == nil {
-		return nil, errors.New("Empty cache.")
-	}
+const ImplHttp = "http"
 
-	server := httpService{
-		address:   config.GetStrVal("address"),
-		converter: converter,
-		storage:   storage,
-		cache:     cache,
-	}
+var _ = RegisterEntity(
+	EntityServer,
+	ImplHttp,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
+		converter := ctx.GetEntity(EntityImageConverter).(Converter)
+		storage := ctx.GetEntity(EntityStorage).(Storage)
+		cache := ctx.GetEntity(EntityCache).(Storage)
 
-	return &server, nil
-}
+		server := httpService{
+			address:   config.GetStrVal("address"),
+			converter: converter,
+			storage:   storage,
+			cache:     cache,
+		}
+
+		return &server, nil
+	},
+)

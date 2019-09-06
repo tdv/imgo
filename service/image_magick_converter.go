@@ -5,7 +5,6 @@ package service
 import (
 	"crypto/sha1"
 	"encoding/hex"
-	"errors"
 
 	"strconv"
 
@@ -67,16 +66,19 @@ func (this *imageMagickConverter) Convert(buf []byte, format string, width *int,
 	return blob, id, nil
 }
 
-func CreateImageMagickConverter(config Config) (Converter, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
+const ImplImageMagick = "imagemagick"
 
-	return &imageMagickConverter{
-		defFormat: config.GetStrVal("format"),
-		defWidth:  config.GetIntVal("size.default.width"),
-		defHeight: config.GetIntVal("size.default.height"),
-		maxWidth:  config.GetIntVal("size.max.width"),
-		maxHeight: config.GetIntVal("size.max.height"),
-	}, nil
-}
+var _ = RegisterEntity(
+	EntityImageConverter,
+	ImplImageMagick,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
+		return &imageMagickConverter{
+			defFormat: config.GetStrVal("format"),
+			defWidth:  config.GetIntVal("size.default.width"),
+			defHeight: config.GetIntVal("size.default.height"),
+			maxWidth:  config.GetIntVal("size.max.width"),
+			maxHeight: config.GetIntVal("size.max.height"),
+		}, nil
+	},
+)

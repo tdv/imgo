@@ -12,51 +12,6 @@ type config struct {
 	config map[string]interface{}
 }
 
-func setDefault(config *viper.Viper) {
-	config.SetDefault(ConfigPath(EntityServer, "active"), ImplHttp)
-
-	config.SetDefault(ConfigPath(EntityServer, ImplHttp, "address"), "0.0.0.0:55555")
-
-	config.SetDefault(ConfigPath(EntityImageConverter, "active"), ImplImageMagick)
-
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "format"), "png")
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.default.width"), 300)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.default.height"), 200)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.max.width"), 4096)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplImageMagick, "size.max.height"), 4096)
-
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "format"), "png")
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.default.width"), 300)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.default.height"), 200)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.max.width"), 4096)
-	config.SetDefault(ConfigPath(EntityImageConverter, ImplStdImage, "size.max.height"), 4096)
-
-	config.SetDefault(ConfigPath(EntityStorage, "active"), ImplPostgres)
-
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "host"), "localhost")
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "port"), 5432)
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "dbname"), "imgo")
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "sslmode"), "disable")
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "user"), "postgres")
-	config.SetDefault(ConfigPath(EntityStorage, ImplPostgres, "password"), "")
-
-	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "host"), "localhost")
-	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "port"), 3306)
-	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "dbname"), "imgo")
-	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "user"), "postgres")
-	config.SetDefault(ConfigPath(EntityStorage, ImplMySql, "password"), "mysql")
-
-	config.SetDefault(ConfigPath(EntityCache, "active"), ImplRedis)
-
-	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "address"), "localhost:6379")
-	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "db"), 0)
-	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "password"), "")
-	config.SetDefault(ConfigPath(EntityCache, ImplRedis, "expiration"), 15)
-
-	config.SetDefault(ConfigPath(EntityCache, ImplMemcached, "nodes"), "localhost:11211")
-	config.SetDefault(ConfigPath(EntityCache, ImplMemcached, "expiration"), 15)
-}
-
 func (this *config) findNode(path string) interface{} {
 	items := strings.Split(path, ".")
 
@@ -137,8 +92,6 @@ func LoadDefConfig() (Config, error) {
 	if err := cfg.ReadInConfig(); err != nil {
 		return nil, err
 	}
-
-	setDefault(cfg)
 
 	config := config{config: cfg.GetStringMap("config")}
 

@@ -67,19 +67,23 @@ func (this *mysqlStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
-func CreateMySqlStorage(config Config) (Storage, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
-	storage := mysqlStorage{}
-	if err := storage.init(
-		config.GetStrVal("host"),
-		strconv.Itoa(config.GetIntVal("port")),
-		config.GetStrVal("dbname"),
-		config.GetStrVal("user"),
-		config.GetStrVal("password"),
-	); err != nil {
-		return nil, err
-	}
-	return &storage, nil
-}
+const ImplMySql = "mysql"
+
+var _ = RegisterEntity(
+	EntityStorage,
+	ImplMySql,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
+		storage := mysqlStorage{}
+		if err := storage.init(
+			config.GetStrVal("host"),
+			strconv.Itoa(config.GetIntVal("port")),
+			config.GetStrVal("dbname"),
+			config.GetStrVal("user"),
+			config.GetStrVal("password"),
+		); err != nil {
+			return nil, err
+		}
+		return &storage, nil
+	},
+)

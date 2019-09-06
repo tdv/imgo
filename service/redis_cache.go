@@ -49,21 +49,23 @@ func (this *redisCache) Get(id string) ([]byte, error) {
 	return []byte(val), nil
 }
 
-func CreateRedisCache(config Config) (Storage, error) {
-	if config == nil {
-		return nil, errors.New("Empty config.")
-	}
+const ImplRedis = "redis"
 
-	client := redisCache{}
+var _ = RegisterEntity(
+	EntityCache,
+	ImplRedis,
+	func(ctx BuildContext) (interface{}, error) {
+		config := ctx.GetConfig()
+		client := redisCache{}
+		if err := client.init(
+			config.GetStrVal("address"),
+			config.GetStrVal("password"),
+			config.GetIntVal("db"),
+			time.Duration(config.GetIntVal("expiration"))*time.Minute,
+		); err != nil {
+			return nil, err
+		}
 
-	if err := client.init(
-		config.GetStrVal("address"),
-		config.GetStrVal("password"),
-		config.GetIntVal("db"),
-		time.Duration(config.GetIntVal("expiration"))*time.Minute,
-	); err != nil {
-		return nil, err
-	}
-
-	return &client, nil
-}
+		return &client, nil
+	},
+)

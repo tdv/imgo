@@ -15,7 +15,7 @@ The whole service consists directly of the ImGo service, storage and cache. I li
 - Converting images to the one common format
 - Supported storage implementations: PostgreSQL based, MySQL based
 - Supported cache implementations: Redis based, Memcached based
-- Supported image converter implementations: ImageMagick based, standart based on 'image' package
+- Supported image converter implementations: ImageMagick based, standard based on 'image' package
 
 # Plans
 - Logging

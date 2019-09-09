@@ -1,0 +1,70 @@
+{
+    "config": {
+        "server": {
+            "active": "http",
+            "http": {
+                "address": "0.0.0.0:55555"
+            }
+        },
+        "imageconverter": {
+            "active": "imagemagick",
+            "imagemagick": {
+                "format": "png",
+                "size": {
+                    "default": {
+                        "width": 300,
+                        "height": 200
+                    },
+                    "max": {
+                        "width": 4096,
+                        "height": 4096
+                    }
+                }
+            },
+            "std": {
+                "format": "png",
+                "size": {
+                    "default": {
+                        "width": 300,
+                        "height": 200
+                    },
+                    "max": {
+                        "width": 4096,
+                        "height": 4096
+                    }
+                }
+            }
+        },
+        "storage": {
+            "active": "postgres",
+            "postgres": {
+                "host": "localhost",
+                "port": 5432,
+                "dbname": "imgo",
+                "sslmode": "disable",
+                "user": "postgres",
+                "password": ""
+            },
+            "mysql": {
+                "host": "localhost",
+                "port": 3306,
+                "dbname": "imgo",
+                "user": "mysql",
+                "password": "mysql"
+            }
+        },
+        "cache": {
+            "active": "redis",
+            "redis": {
+                "address": "localhost:6379",
+                "db": 0,
+                "password": "",
+                "expiration": 15
+            },
+            "memcached": {
+                "nodes": "localhost:11211",
+                "expiration": 15
+            }
+        }
+    }
+}

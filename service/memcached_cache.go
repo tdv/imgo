@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 import (
@@ -46,6 +47,7 @@ func (this *memcachedCache) Get(id string) ([]byte, error) {
 	return val.Value, nil
 }
 
+// ImplMemcached - id of Memcached based implementation of the Storage interface
 const ImplMemcached = "memcached"
 
 var _ = RegisterEntity(

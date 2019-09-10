@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 // For Ubuntu 16.04 : sudo apt-get install libmagickwand-dev
@@ -133,6 +134,7 @@ func (this *stdImageConverter) Convert(buf []byte, format string, width *int, he
 	return blob, id, nil
 }
 
+// ImplStdImage - id of standard based implementation of the Converter interface
 const ImplStdImage = "std"
 
 var _ = RegisterEntity(

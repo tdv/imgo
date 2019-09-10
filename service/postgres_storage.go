@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 import (
@@ -69,6 +70,7 @@ func (this *postgresStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
+// ImplPostgres - id of PostgreSQL based implementation of the Storage interface
 const ImplPostgres = "postgres"
 
 var _ = RegisterEntity(

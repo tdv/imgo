@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 import (
@@ -49,6 +50,7 @@ func (this *redisCache) Get(id string) ([]byte, error) {
 	return []byte(val), nil
 }
 
+// ImplRedis - id of Redis based implementation of the Storage interface
 const ImplRedis = "redis"
 
 var _ = RegisterEntity(

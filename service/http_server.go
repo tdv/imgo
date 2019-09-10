@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 import (
@@ -155,6 +156,7 @@ func (this *httpService) Started() bool {
 	return this.server != nil
 }
 
+// ImplHttp - id of default http server implementation of Service interface
 const ImplHttp = "http"
 
 var _ = RegisterEntity(

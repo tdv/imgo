@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 import (
@@ -67,6 +68,7 @@ func (this *mysqlStorage) Get(id string) ([]byte, error) {
 	return blob, nil
 }
 
+// ImplMySql - id of MySql based implementation of the Storage interface
 const ImplMySql = "mysql"
 
 var _ = RegisterEntity(

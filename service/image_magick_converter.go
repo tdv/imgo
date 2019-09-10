@@ -1,3 +1,4 @@
+// Service is the images service package (ImGo)
 package service
 
 // For Ubuntu 16.04 : sudo apt-get install libmagickwand-dev
@@ -66,6 +67,7 @@ func (this *imageMagickConverter) Convert(buf []byte, format string, width *int,
 	return blob, id, nil
 }
 
+// ImplImageMagick - id of ImageMagick based implementation of the Converter interface
 const ImplImageMagick = "imagemagick"
 
 var _ = RegisterEntity(

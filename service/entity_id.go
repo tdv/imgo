@@ -1,8 +1,14 @@
+// Service is the images service package (ImGo)
 package service
 
+// Identifiers of entities
 const (
-	EntityServer         = "server"
+	// Server
+	EntityServer = "server"
+	// Image converter
 	EntityImageConverter = "imageconverter"
-	EntityStorage        = "storage"
-	EntityCache          = "cache"
+	// Storage
+	EntityStorage = "storage"
+	// Cache
+	EntityCache = "cache"
 )

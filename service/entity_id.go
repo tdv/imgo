@@ -1,4 +1,3 @@
-// Service is the images service package (ImGo)
 package service
 
 // Identifiers of entities

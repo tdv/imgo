@@ -1,4 +1,3 @@
-// Service is the images service package (ImGo)
 package service
 
 // Converter provides method for converting input images into common format.

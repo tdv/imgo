@@ -1,4 +1,3 @@
-// Service is the images service package (ImGo)
 package service
 
 // BuildContext interface provides methods for getting configuration

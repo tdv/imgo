@@ -1,4 +1,3 @@
-// Service is the images service package (ImGo)
 package service
 
 // For Ubuntu 16.04 : sudo apt-get install libmagickwand-dev

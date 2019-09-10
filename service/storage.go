@@ -1,4 +1,3 @@
-// Service is the images service package (ImGo)
 package service
 
 // Storage provides methods for load and store some buffer in the storage.

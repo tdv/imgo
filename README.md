@@ -32,9 +32,8 @@ I built this project in Go 1.18 on Ubuntu 20.04, and I hope that project will be
 # Build
 ```bash
 git clone https://github.com/tdv/imgo.git  
-cd go/src/imgo
-go get
-go build
+cd imgo
+go build .
 ```
 **Note**
 If you have a build issue on Ubuntu related on ImageMagick, you can try to install the package with a command like below

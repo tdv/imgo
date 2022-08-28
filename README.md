@@ -36,6 +36,11 @@ cd go/src/imgo
 go get
 go build
 ```
+**Note**
+If you have a build issue on Ubuntu related on ImageMagick, you can try to install the package with a command like below
+```bash
+sudo apt-get install libmagickwand-dev
+```
 
 # Usage
 **Note**  

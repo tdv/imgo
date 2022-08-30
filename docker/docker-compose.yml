@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+
+  imgo-postgres:
+    image: imgo_postgres:v1
+    restart: always
+    expose:
+      - "5432"
+    volumes:
+      - ./imgo_data/postgres:/opt/db_data
+    ports:
+      - "5432:5432"
+
+  imgo-redis:
+    image: imgo_redis:v1
+    restart: always
+    expose:
+      - "6379"
+    volumes:
+      - ./imgo_data/redis:/opt/redis_data
+    ports:
+      - "6379:6379"
+
+  imgo-service:
+    image: imgo_service:v1
+    restart: always
+    expose:
+      - "55555"
+    environment:
+      DB_HOST: "imgo-postgres"
+      DB_NAME: "imgo"
+      DB_USER: "postgres"
+      REDIS_ADDRESS: "imgo-redis:6379"
+    volumes:
+      - ./imgo_data/service:/opt/service_data
+    depends_on:
+      - imgo-postgres
+      - imgo-redis
+    ports:
+      - "55555:55555"

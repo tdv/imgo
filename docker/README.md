@@ -29,5 +29,5 @@ docker-compose down
 **How to test and use you can find a few test requests on the main README.md** ([Usage](https://github.com/tdv/imgo/blob/master/README.md#usage))  
 
 
-#Wrapping up
+# Wrapping up
 Good luck and I will appreciate any feedback :)

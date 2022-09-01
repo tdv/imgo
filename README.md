@@ -1,15 +1,12 @@
-# ImGo is a service written in Go to download, convert and distribute downloaded images.
+# ImGo is an image service written in Go.
 
 # Introduction
 ImGo might be considered like an ambiguous abbreviation for “Images in Go” or “I'm going to learn GoLang” (your choice). The major purpose of the service is to be fast for getting stored images rather fast uploading.
 
 # Features
-- Uploading images
-- Getting images
-- Converting images to the one common format
-- Supported storages: PostgreSQL, MySQL
-- Supported caches: Redis, Memcached
-- Supported image converter: ImageMagick based, standard library based on 'image' package
+- Upload, download and convert images
+- Supported: PostgreSQL, MySQL, Redis, Memcached
+- Based on: ImageMagick and Go standard library
 
 # OS and Compiller
 The project was built with Go 1.18 on Ubuntu 20.04. Hopefully, the project will be able to build within other OS and compiler version.
@@ -31,27 +28,10 @@ sudo apt-get install libmagickwand-dev
 
 # Usage
 **Note**  
-Ones the service in its basic configuration was built you need to have installed PostgreSQL and Redis on your workstation to use the on with default configuration.
-Nevertheless, that is possible to try all in one out of the box using prepared docker-containerized approach (see 'docker' folder; ther is everything you need to try the service)
-
-(PostgreSQL database schema in db/postgres/schema.sql)  
-
-**Run**  
-If you do not use approach from 'docker' folder, after the build you can run application by followed command
-```bash
-./imgo
-```
-**Note**  
-The service starts with the configuration file, which should be placed next to the application.  
-Allowed configuration formats:
-- json
-- xml
-- yaml  
-
-The format is determined by the configuration file extension.  
+Ones the service was built you need to have the installed PostgreSQL and Redis on your workstation. Nevertheless, that is possible to try all in one out of the box having used a self-contained solution based on docker and docker-compose (see the folder 'docker'). Definitely recommended!
 
 **Upload images**  
-For testing images uploads, you can use curl.  
+For testing image uploads, you can use curl.  
 ```bash
 curl -is -XPUT "http://localhost:55555/put?format=JPG" --data-binary @./images/1.jpg
 ```
@@ -73,7 +53,7 @@ Content-Length: 40
 The returned identifier is intended to obtain the image, as shown in the example below.  
 
 **Getting images**  
-After image is uploaded, you can get the one by a link similar to  
+After the image was uploaded, you can get the one by a link similar to  
 http://localhost:55555/get/5966f327301f3922fce598f0574fa518d492f808
 
 # Tests
@@ -113,6 +93,4 @@ Let's look at the line from the results
 ```bash
 Requests per second:    8941.79 [#/sec] (mean)
 ```
-I think, that is a good result. If your owns service really used with loads close to 10k rps, you'll have a lot of interesting tasks in future and money :)  
-
-**Many thanks for your attention!**
+I think, that is a good result. If your service really used with loads close to 10k rps, you'll have a lot of interesting tasks...

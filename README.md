@@ -1,31 +1,21 @@
 # ImGo is a service written in Go to download, convert and distribute downloaded images.
 
-# Motivation
-ImGo is an ambiguous abbreviation for “Images in Go”, although rather it might means “I'm going to learn GoLang”  
-This name has been chosen coz it's my first own project in Go after more than 15 years of experience in C++. I like C++, and I hope that this language will have new features, such as reflection, network, etc., although now it is not. It became a cause for me to try something else from programming languages. If I wish to learn something, I'll choose a task that will be close to my real job, and try to solve it in new. Some time ago I was solving a very close task. I implemented an image service in my major programming language. After that I tried to do it in Go.  
-It was an interesting experience for me, and I hope that this project might be a step towards learning Go for you like as for me, or this will have become a part of your own web project.
-
 # Introduction
-The aim of the service is not to frequently upload images by resources' administrators or topic creators, and majour purpouse is the fast getting stored and cached images from a service by resource users.  
-The whole service consists directly of the ImGo service, storage and cache. I like the dependency injection  technique. This is a quite flexible approach for implementing software without hard dependencies and easy to enlarge applications by new features. I'm using this approach through out where I might to do it, but nothing more than enough for my needs. Therefore, in the service, I used dependency injection, and I have a flexible architecture for adding new storage and cache implementations. You can enlarge service by your own storage, cache and other entities implementations for your needs. And I hope that it'll be effortless for you.  
+ImGo might be considered like an ambiguous abbreviation for “Images in Go” or “I'm going to learn GoLang” (your choice). The major purpose of the service is to be fast for getting stored images rather fast uploading.
 
 # Features
 - Uploading images
 - Getting images
 - Converting images to the one common format
-- Supported storage implementations: PostgreSQL based, MySQL based
-- Supported cache implementations: Redis based, Memcached based
-- Supported image converter implementations: ImageMagick based, standard based on 'image' package
-
-# Plans
-- Logging
-- Testing
+- Supported storages: PostgreSQL, MySQL
+- Supported caches: Redis, Memcached
+- Supported image converter: ImageMagick based, standard library based on 'image' package
 
 # OS and Compiller
-I built this project in Go 1.18 on Ubuntu 20.04, and I hope that project will be able to build in other OS and compler's versions.
+The project was built with Go 1.18 on Ubuntu 20.04. Hopefully, the project will be able to build within other OS and compiler version.
 
 # Dependencies
-- ImageMagick (for image convertation)
+- ImageMagick
 
 # Build
 ```bash
@@ -41,11 +31,13 @@ sudo apt-get install libmagickwand-dev
 
 # Usage
 **Note**  
-Since the service in its basic configuration uses PostgreSQL-based storage and Redis-based cache, you must have these services in your environment. Of course, you can change the basic options in the configuration file or, perhaps, add your own implementation of one of the interfaces and use it.  
+Ones the service in its basic configuration was built you need to have installed PostgreSQL and Redis on your workstation to use the on with default configuration.
+Nevertheless, that is possible to try all in one out of the box using prepared docker-containerized approach (see 'docker' folder; ther is everything you need to try the service)
+
 (PostgreSQL database schema in db/postgres/schema.sql)  
 
 **Run**  
-After the build you can run application by followed command
+If you do not use approach from 'docker' folder, after the build you can run application by followed command
 ```bash
 ./imgo
 ```
@@ -59,17 +51,16 @@ Allowed configuration formats:
 The format is determined by the configuration file extension.  
 
 **Upload images**  
-For testing images uploading, you can use curl.  
-For example, run the below command from go/src/imgo directory  
+For testing images uploads, you can use curl.  
 ```bash
 curl -is -XPUT "http://localhost:55555/put?format=JPG" --data-binary @./images/1.jpg
 ```
-For uploading an image with a custom size, you can add extra parameters, like as in the command below.  
+To upload an image with a custom size, you can add extra parameters
 ```bash
 curl -is -XPUT "http://localhost:55555/put?format=JPG&width=600&height=300" --data-binary @./images/1.jpg
 ```
 **Note**  
-You have to specify the required format parameter to understand the input format in the image converter (ImageMagick library).  
+You need to specify the format parameter for the converter (ImageMagick library).  
 ```bash
 Response example:
 HTTP/1.1 200 OK
@@ -82,11 +73,11 @@ Content-Length: 40
 The returned identifier is intended to obtain the image, as shown in the example below.  
 
 **Getting images**  
-After image uploading, you can get it via a link similar to  
+After image is uploaded, you can get the one by a link similar to  
 http://localhost:55555/get/5966f327301f3922fce598f0574fa518d492f808
 
 # Tests
-Very often for basic load testing I use the ab utility. Such a simple test give me to do basic evaluation of the capabilities of the service.
+The ab utility might be used to assess the speed.
 ```bash
 ab -c 800 -n 1000000 -r -k "http://localhost:55555/get/645b92e65c697d9f97a61f81b9a8739dd18e5a1f"
 
